@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import ru.kettuproj.cloudalbum.repository.CARepository
+import ru.kettuproj.cloudalbum.repository.AuthRepo
 import ru.kettuproj.cloudalbum.settings.Settings
 
 class LoginViewModel(application: Application) : AndroidViewModel(application){
@@ -17,7 +17,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application){
     fun login(login: String, pass: String){
         isProcessed.value = false
         GlobalScope.launch {
-            val data = CARepository.postLogin(login, pass)
+            val data = AuthRepo.postLogin(login, pass)
             if(data.data!=null) {
                 Settings.setToken(context, data.data.token)
                 isAuth.value = true

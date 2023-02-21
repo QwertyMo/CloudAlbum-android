@@ -7,9 +7,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.kettuproj.cloudalbum.model.Image
-import ru.kettuproj.cloudalbum.repository.CARepository
+import ru.kettuproj.cloudalbum.repository.ImageRepo
 import ru.kettuproj.cloudalbum.settings.Settings
-import java.io.File
 
 class ImagesViewModel (application: Application) : AndroidViewModel(application)  {
 
@@ -26,7 +25,7 @@ class ImagesViewModel (application: Application) : AndroidViewModel(application)
     private fun getAllImages(){
         GlobalScope.launch {
             if(token.value!=null) {
-                val data = CARepository.getMyImages(token.value.toString())
+                val data = ImageRepo.getMyImages(token.value.toString())
                 images.addAll(data.data)
             }
         }
@@ -35,7 +34,7 @@ class ImagesViewModel (application: Application) : AndroidViewModel(application)
     fun uploadImage(img: ByteArray){
         GlobalScope.launch{
             if(token.value!=null) {
-                val data = CARepository.uploadImage(token.value.toString(), img)
+                val data = ImageRepo.uploadImage(token.value.toString(), img)
                 if (data.data != null) images.add(data.data)
             }
         }

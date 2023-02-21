@@ -6,7 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.kettuproj.cloudalbum.model.Image
-import ru.kettuproj.cloudalbum.repository.CARepository
+import ru.kettuproj.cloudalbum.repository.ImageRepo
 import ru.kettuproj.cloudalbum.settings.Settings
 
 class ImageViewModel (application: Application) : AndroidViewModel(application)  {
@@ -24,7 +24,7 @@ class ImageViewModel (application: Application) : AndroidViewModel(application) 
     fun loadImage(uuid: String){
         GlobalScope.launch {
             if(token.value!=null) {
-                val data = CARepository.getImageByUUID(token.value.toString(), uuid)
+                val data = ImageRepo.getImageByUUID(token.value.toString(), uuid)
                 image.value = data.data
             }
         }
@@ -33,7 +33,7 @@ class ImageViewModel (application: Application) : AndroidViewModel(application) 
     fun deleteImage(uuid: String){
         GlobalScope.launch {
             if(token.value!=null) {
-                isDeleted.value = CARepository.deleteImage(token.value.toString(), uuid).data
+                isDeleted.value = ImageRepo.deleteImage(token.value.toString(), uuid).data
             }
         }
     }

@@ -1,12 +1,11 @@
 package ru.kettuproj.cloudalbum.screen.splash.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import ru.kettuproj.cloudalbum.repository.CARepository
+import ru.kettuproj.cloudalbum.repository.AuthRepo
 import ru.kettuproj.cloudalbum.settings.Settings
 
 class SplashViewModel (application: Application) : AndroidViewModel(application)  {
@@ -26,7 +25,7 @@ class SplashViewModel (application: Application) : AndroidViewModel(application)
 
     private fun checkAuth(){
         GlobalScope.launch {
-            val user = CARepository.getMe(token.value.toString()).data
+            val user = AuthRepo.getMe(token.value.toString()).data
             if(user!=null) isAuthorized.value = true
             endScreen.value = true
         }

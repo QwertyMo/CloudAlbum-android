@@ -6,7 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.kettuproj.cloudalbum.model.Album
-import ru.kettuproj.cloudalbum.repository.CARepository
+import ru.kettuproj.cloudalbum.repository.AlbumRepo
 import ru.kettuproj.cloudalbum.settings.Settings
 
 class CreateAlbumViewModel (application: Application) : AndroidViewModel(application) {
@@ -29,7 +29,7 @@ class CreateAlbumViewModel (application: Application) : AndroidViewModel(applica
         if(name.isEmpty()) return
         val t = token.value ?: return
         GlobalScope.launch {
-            val data = CARepository.createAlbum(t, name)
+            val data = AlbumRepo.createAlbum(t, name)
             if(data.data!=null){
                 createdAlbum.value = data.data
                 isCreated.value = true
