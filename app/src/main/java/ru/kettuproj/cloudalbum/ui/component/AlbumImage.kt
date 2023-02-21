@@ -8,8 +8,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
 import ru.kettuproj.cloudalbum.common.Constant
 import ru.kettuproj.cloudalbum.model.Image
 
@@ -18,6 +22,17 @@ fun AlbumImage(
     onClick: () -> Unit,
     image: Image
 ){
+    val cacheId = "kettu_album_${image.uuid}_${image.created}"
+
+    val request = ImageRequest.Builder(LocalContext.current)
+        .data(Constant.imageURL(image.uuid))
+        .memoryCacheKey(cacheId)
+        .diskCacheKey(cacheId)
+        .networkCachePolicy(CachePolicy.ENABLED)
+        .diskCachePolicy(CachePolicy.ENABLED)
+        .memoryCachePolicy(CachePolicy.ENABLED)
+        .build()
+
     Box(
         modifier = Modifier
             .padding(1.dp)
@@ -27,7 +42,7 @@ fun AlbumImage(
     ){
         AsyncImage(
             contentScale = ContentScale.Crop,
-            model = Constant.imageURL(image.uuid),
+            model = request,
             contentDescription = ""
         )
     }
