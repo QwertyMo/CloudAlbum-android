@@ -45,4 +45,8 @@ class ImagesViewModel (application: Application) : AndroidViewModel(application)
         Settings.deleteToken(context)
     }
 
+    fun getToken():String?{
+        return token.value
+    }
+
 }

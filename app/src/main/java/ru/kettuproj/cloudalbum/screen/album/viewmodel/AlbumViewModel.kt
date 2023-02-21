@@ -46,4 +46,8 @@ class AlbumViewModel (application: Application) : AndroidViewModel(application) 
     fun setID(id: String){
         this.id = id.toInt()
     }
+
+    fun getToken():String?{
+        return token.value
+    }
 }

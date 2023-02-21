@@ -20,12 +20,15 @@ import ru.kettuproj.cloudalbum.model.Image
 @Composable
 fun AlbumImage(
     onClick: () -> Unit,
-    image: Image
+    image: Image,
+    token: String? = null
 ){
     val cacheId = "kettu_album_${image.uuid}_${image.created}"
 
     val request = ImageRequest.Builder(LocalContext.current)
-        .data(Constant.imageURL(image.uuid))
+    if(token!=null) request
+        .addHeader("Authorization", "Bearer $token")
+    request.data(Constant.imageURL(image.uuid))
         .memoryCacheKey(cacheId)
         .diskCacheKey(cacheId)
         .networkCachePolicy(CachePolicy.ENABLED)

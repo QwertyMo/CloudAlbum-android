@@ -53,7 +53,8 @@ fun ImagesScreen(navController: NavController){
             items(items = images, itemContent = {
                 AlbumImage(
                     onClick = { navController.navigate(Destination.IMAGE, it.uuid) },
-                    image = it
+                    image = it,
+                    token = viewModelImage.getToken()
                 )
             })
         }
