@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -52,18 +53,17 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     backgroundColor = MaterialTheme.colors.background
                 ) {
-                    Navigation(rememberNavController())
+                    Navigation(rememberNavController(), splashScreen)
                 }
             }
         }
-        splashScreen.setKeepOnScreenCondition { false }
     }
 }
 
 @Composable
-fun Navigation(navController: NavHostController){
+fun Navigation(navController: NavHostController, splash: SplashScreen){
     NavHost(navController = navController, startDestination = Destination.SPLASH.dest) {
-        composable(Destination.SPLASH.dest) { SplashScreen(navController) }
+        composable(Destination.SPLASH.dest) { SplashScreen(navController, splash) }
         composable(Destination.USER_IMAGES.dest) { ImagesScreen(navController) }
         composable(Destination.LOGIN.dest) { LoginScreen(navController) }
         composable(Destination.ALBUMS.dest) { AlbumsScreen(navController) }

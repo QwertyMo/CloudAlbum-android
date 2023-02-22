@@ -34,7 +34,6 @@ fun AlbumImage(
         .networkCachePolicy(CachePolicy.ENABLED)
         .diskCachePolicy(CachePolicy.ENABLED)
         .memoryCachePolicy(CachePolicy.ENABLED)
-        .build()
 
     Box(
         modifier = Modifier
@@ -45,7 +44,7 @@ fun AlbumImage(
     ){
         AsyncImage(
             contentScale = ContentScale.Crop,
-            model = request,
+            model = request.build(),
             contentDescription = ""
         )
     }
