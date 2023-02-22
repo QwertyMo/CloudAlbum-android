@@ -26,6 +26,7 @@ import ru.kettuproj.cloudalbum.screen.splash.SplashScreen
 import ru.kettuproj.cloudalbum.screen.image.ImageScreen
 import ru.kettuproj.cloudalbum.screen.login.LoginScreen
 import ru.kettuproj.cloudalbum.screen.userImages.ImagesScreen
+import ru.kettuproj.cloudalbum.ui.component.BottomNav
 import ru.kettuproj.cloudalbum.ui.theme.CloudAlbumTheme
 
 class MainActivity : ComponentActivity() {
@@ -39,6 +40,7 @@ class MainActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
         setContent {
+            val navController =  rememberNavController()
             CloudAlbumTheme {
                 // A surface container using the 'background' color from the theme
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -51,9 +53,10 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Scaffold(
-                    backgroundColor = MaterialTheme.colors.background
+                    backgroundColor = MaterialTheme.colors.background,
+                    bottomBar = { BottomNav(navController = navController)}
                 ) {
-                    Navigation(rememberNavController(), splashScreen)
+                    Navigation(navController, splashScreen)
                 }
             }
         }
