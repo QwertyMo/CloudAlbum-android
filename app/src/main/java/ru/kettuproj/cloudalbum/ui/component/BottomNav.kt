@@ -77,6 +77,6 @@ sealed class BottomNavItem(
     val icon:       Int,
     @StringRes val resourceId: Int){
 
-    object Profile : BottomNavItem(Destination.USER_IMAGES, R.drawable.ic_launcher_foreground, R.string.profile)
-    object Albums  : BottomNavItem(Destination.ALBUMS, R.drawable.ic_launcher_foreground, R.string.albums)
+    object Profile : BottomNavItem(Destination.USER_IMAGES, R.drawable.baseline_person_24, R.string.profile)
+    object Albums  : BottomNavItem(Destination.ALBUMS, R.drawable.baseline_image_24, R.string.albums)
 }

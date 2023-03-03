@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.TextField
 import androidx.compose.material3.Text
@@ -14,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collectLatest
@@ -50,7 +52,11 @@ fun LoginScreen(navController: NavController){
         verticalArrangement = Arrangement.Center
     ) {
 
-        Image(painterResource(R.drawable.ic_launcher_foreground),"content description")
+        Image(
+            modifier = Modifier.size(128.dp),
+            painter = painterResource(R.drawable.baseline_photo_album_24),
+            contentDescription = "Icon"
+        )
 
         Text(text = "Login")
         TextField(value = login.value, onValueChange = {
