@@ -4,6 +4,13 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import ru.kettuproj.cloudalbum.model.Image
+import ru.kettuproj.cloudalbum.model.RepositoryResponse
+import ru.kettuproj.cloudalbum.net.Client
+import java.io.IOException
 import java.net.InetAddress
 
 fun checkIsInternetAvailable(context: Context): Boolean {
@@ -33,6 +40,11 @@ fun checkIsInternetAvailable(context: Context): Boolean {
     return result
 }
 
-fun checkIsHostAvailable():Boolean{
-    return InetAddress.getByName(Constant.REST_HOST).isReachable(5000)
+suspend fun checkIsHostAvailable():Boolean{
+    return try {
+        Client.client.request(Constant.REST_HOST)
+        true
+    }catch (e: java.lang.Exception){
+        false
+    }
 }

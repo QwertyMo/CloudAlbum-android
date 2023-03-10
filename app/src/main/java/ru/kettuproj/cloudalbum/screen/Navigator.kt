@@ -6,7 +6,7 @@ import androidx.navigation.navOptions
 
 enum class Destination(val dest: String){
     LOGIN("login"),
-    USER_IMAGES("user_images"),
+    MY_PROFILE("my_profile"),
     IMAGE("image"),
     SPLASH("splash"),
     ALBUMS("albums"),

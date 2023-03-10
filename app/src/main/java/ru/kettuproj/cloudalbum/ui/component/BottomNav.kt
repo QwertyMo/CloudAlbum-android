@@ -4,10 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +34,7 @@ fun BottomNav(
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    var selectedItem by remember { mutableStateOf(Destination.USER_IMAGES.dest) }
+    var selectedItem by remember { mutableStateOf(Destination.MY_PROFILE.dest) }
     val route = currentDestination?.route?.split("/")?.get(0) ?: ""
 
     var hided by remember { mutableStateOf(true) }
@@ -48,12 +45,12 @@ fun BottomNav(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        BottomNavigation {
+        NavigationBar{
             if(items.map { it.route.dest }.contains(route))
                 selectedItem = route
 
             items.forEach { screen ->
-                BottomNavigationItem(
+                NavigationBarItem(
                     icon = { Icon(painterResource(screen.icon), contentDescription = null) },
                     label = { Text(stringResource(screen.resourceId)) },
                     selected = currentDestination?.hierarchy?.any { screen.route.dest == selectedItem } == true,
@@ -77,6 +74,6 @@ sealed class BottomNavItem(
     val icon:       Int,
     @StringRes val resourceId: Int){
 
-    object Profile : BottomNavItem(Destination.USER_IMAGES, R.drawable.baseline_person_24, R.string.profile)
+    object Profile : BottomNavItem(Destination.MY_PROFILE, R.drawable.baseline_person_24, R.string.profile)
     object Albums  : BottomNavItem(Destination.ALBUMS, R.drawable.baseline_image_24, R.string.albums)
 }

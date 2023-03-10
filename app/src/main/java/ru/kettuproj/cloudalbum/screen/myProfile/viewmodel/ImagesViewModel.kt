@@ -1,4 +1,4 @@
-package ru.kettuproj.cloudalbum.screen.userImages.viewmodel
+package ru.kettuproj.cloudalbum.screen.myProfile.viewmodel
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
@@ -7,18 +7,21 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.kettuproj.cloudalbum.model.Image
+import ru.kettuproj.cloudalbum.model.User
+import ru.kettuproj.cloudalbum.repository.AuthRepo
 import ru.kettuproj.cloudalbum.repository.ImageRepo
 import ru.kettuproj.cloudalbum.settings.Settings
 
 class ImagesViewModel (application: Application) : AndroidViewModel(application)  {
 
     private var context   = application
-    private val token = MutableStateFlow(null as String?)
+    private val token     = MutableStateFlow(null as String?)
 
-    val images = mutableStateListOf<Image>()
-
+    val images  = mutableStateListOf<Image>()
+    val user    = MutableStateFlow<User?>(null)
     init {
         token.value = Settings.getToken(context)
+        loadUser()
         getAllImages()
     }
 
@@ -27,6 +30,15 @@ class ImagesViewModel (application: Application) : AndroidViewModel(application)
             if(token.value!=null) {
                 val data = ImageRepo.getMyImages(token.value.toString())
                 images.addAll(data.data)
+            }
+        }
+    }
+
+    private fun loadUser(){
+        GlobalScope.launch {
+            if(token.value!=null) {
+                val data = AuthRepo.getMe(token.value.toString())
+                user.value = data.data
             }
         }
     }

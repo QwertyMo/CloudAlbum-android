@@ -1,29 +1,25 @@
 package ru.kettuproj.cloudalbum.screen.image
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Environment
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.kettuproj.cloudalbum.common.Constant
-import ru.kettuproj.cloudalbum.model.Image
 import ru.kettuproj.cloudalbum.screen.Destination
 import ru.kettuproj.cloudalbum.screen.image.viewmodel.ImageViewModel
 import java.io.File
@@ -53,7 +49,7 @@ fun ImageScreen(navController: NavController, imageUUID: String?) {
                     route = route?.replace("{${i.key}}", navController.previousBackStackEntry?.arguments?.getString(i.key)!!)
                 }
         }
-        else route = Destination.USER_IMAGES.dest
+        else route = Destination.MY_PROFILE.dest
         navController.popBackStack()
         navController.popBackStack()
         navController.navigate(route!!)

@@ -7,8 +7,10 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -25,10 +27,11 @@ import ru.kettuproj.cloudalbum.screen.createAlbum.CreateAlbumScreen
 import ru.kettuproj.cloudalbum.screen.splash.SplashScreen
 import ru.kettuproj.cloudalbum.screen.image.ImageScreen
 import ru.kettuproj.cloudalbum.screen.login.LoginScreen
-import ru.kettuproj.cloudalbum.screen.userImages.ImagesScreen
+import ru.kettuproj.cloudalbum.screen.myProfile.MyProfileScreen
 import ru.kettuproj.cloudalbum.ui.component.BottomNav
 import ru.kettuproj.cloudalbum.ui.theme.CloudAlbumTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -44,7 +47,7 @@ class MainActivity : ComponentActivity() {
             CloudAlbumTheme {
                 // A surface container using the 'background' color from the theme
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val color1 = MaterialTheme.colors.background
+                    val color1 = MaterialTheme.colorScheme.background
                     window.statusBarColor = Color.rgb(
                         color1.red,
                         color1.green,
@@ -53,10 +56,10 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Scaffold(
-                    backgroundColor = MaterialTheme.colors.background,
+                    containerColor = MaterialTheme.colorScheme.background,
                     bottomBar = { BottomNav(navController = navController)}
-                ) {
-                    Navigation(navController, splashScreen)
+                ) { paddings ->
+                    Navigation(navController, splashScreen, paddings)
                 }
             }
         }
@@ -64,10 +67,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Navigation(navController: NavHostController, splash: SplashScreen){
+fun Navigation(navController: NavHostController, splash: SplashScreen, paddings: PaddingValues){
     NavHost(navController = navController, startDestination = Destination.SPLASH.dest) {
         composable(Destination.SPLASH.dest) { SplashScreen(navController, splash) }
-        composable(Destination.USER_IMAGES.dest) { ImagesScreen(navController) }
+        composable(Destination.MY_PROFILE.dest) { MyProfileScreen(navController, paddings) }
         composable(Destination.LOGIN.dest) { LoginScreen(navController) }
         composable(Destination.ALBUMS.dest) { AlbumsScreen(navController) }
         composable(Destination.CREATE_ALBUM.dest) { CreateAlbumScreen(navController) }

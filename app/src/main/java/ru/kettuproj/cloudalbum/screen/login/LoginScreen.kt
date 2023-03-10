@@ -5,8 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +25,7 @@ import ru.kettuproj.cloudalbum.screen.Destination
 import ru.kettuproj.cloudalbum.screen.login.viewmodel.LoginViewModel
 import ru.kettuproj.cloudalbum.screen.navigate
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController){
     val loginViewModel: LoginViewModel = viewModel()
@@ -36,7 +38,7 @@ fun LoginScreen(navController: NavController){
             loginViewModel.isAuth.collectLatest { isAuth ->
                 if(!isProcessed) return@collectLatest
                 if(isAuth)
-                    navController.navigate(Destination.USER_IMAGES){
+                    navController.navigate(Destination.MY_PROFILE){
                         popUpTo(navController.graph.id){
                             inclusive =  true
                         }
