@@ -8,7 +8,7 @@ import ru.kettuproj.cloudalbum.model.Image
 
 @Composable
 fun requestImage(image: Image, token: String? = null):ImageRequest{
-    val cacheId = "kettu_album_${image.uuid}_${image.created}"
+    val cacheId = Constant.cacheID(image)
 
     val request = ImageRequest.Builder(LocalContext.current)
     if(token!=null) request

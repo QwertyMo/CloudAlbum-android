@@ -3,6 +3,7 @@ package ru.kettuproj.cloudalbum.screen.album.viewmodel
 import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ class AlbumViewModel (application: Application) : AndroidViewModel(application) 
         getAllImages()
     }
 
+    @DelicateCoroutinesApi
     private fun getAllImages(){
         GlobalScope.launch {
             if(token.value!=null && id!=null) {
@@ -34,6 +36,7 @@ class AlbumViewModel (application: Application) : AndroidViewModel(application) 
         }
     }
 
+    @DelicateCoroutinesApi
     fun uploadImage(img: ByteArray){
         GlobalScope.launch{
             if(token.value!=null && id!=null) {

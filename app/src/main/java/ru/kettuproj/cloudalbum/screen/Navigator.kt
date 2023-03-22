@@ -29,3 +29,7 @@ fun NavController.navigate(dest: Destination){
 fun NavController.navigate(dest: Destination, param: String){
     navigate("${dest.dest}/$param")
 }
+
+fun NavController.navigate(dest: Destination, params: Map<String, String>){
+    navigate("${dest.dest}?${params.map { "${it.key}=${it.value}" }.joinToString("&")}")
+}

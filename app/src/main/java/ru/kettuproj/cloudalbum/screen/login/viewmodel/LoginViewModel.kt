@@ -2,6 +2,7 @@ package ru.kettuproj.cloudalbum.screen.login.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application){
     val isAuth = MutableStateFlow(false)
     val isProcessed = MutableStateFlow(false)
 
+    @DelicateCoroutinesApi
     fun login(login: String, pass: String){
         isProcessed.value = false
         GlobalScope.launch {

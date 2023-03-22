@@ -32,7 +32,7 @@ fun BoxScope.ButtonAddImage(galleryLauncher: ManagedActivityResultLauncher<Strin
 }
 
 @Composable
-fun GalleryLauncher(
+fun galleryLauncher(
     onLoad: (byteArray: ByteArray) -> Unit
 ): ManagedActivityResultLauncher<String, Uri?> {
     val context = LocalContext.current
@@ -41,6 +41,7 @@ fun GalleryLauncher(
             val inputStream = context.contentResolver.openInputStream(url)
             val byteArray = inputStream?.readBytes()
             if(byteArray!=null) onLoad(byteArray)
+            inputStream?.close()
         }
 
     }

@@ -2,12 +2,14 @@ package ru.kettuproj.cloudalbum.screen.splash.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.kettuproj.cloudalbum.repository.AuthRepo
 import ru.kettuproj.cloudalbum.settings.Settings
 
+@DelicateCoroutinesApi
 class SplashViewModel (application: Application) : AndroidViewModel(application)  {
 
     private var context   = application

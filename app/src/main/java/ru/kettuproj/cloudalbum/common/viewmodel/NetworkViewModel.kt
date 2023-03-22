@@ -2,12 +2,14 @@ package ru.kettuproj.cloudalbum.common.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.kettuproj.cloudalbum.common.checkIsHostAvailable
 import ru.kettuproj.cloudalbum.common.checkIsInternetAvailable
 
+@DelicateCoroutinesApi
 class NetworkViewModel(application: Application): AndroidViewModel(application)  {
 
     private val context = application

@@ -4,78 +4,113 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Environment
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.kettuproj.cloudalbum.common.Constant
+import ru.kettuproj.cloudalbum.model.Image
+import ru.kettuproj.cloudalbum.model.StateResult
 import ru.kettuproj.cloudalbum.screen.Destination
 import ru.kettuproj.cloudalbum.screen.image.viewmodel.ImageViewModel
+import ru.kettuproj.cloudalbum.ui.component.image.ZoomableAsyncImage
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 import java.nio.file.Files
 
+@Composable
+@DelicateCoroutinesApi
+@ExperimentalPagerApi
+fun ImageScreen(
+    navController: NavController,
+    posIn: String?,
+    albumID: String?
+) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Black)
+    ){
+        val album = albumID?.toInt()
+        val viewModel: ImageViewModel = viewModel()
+        viewModel.getDataCount(album)
+        val stop = remember { mutableStateOf(false) }
+
+        val pos = rememberPagerState(initialPage = posIn?.toInt() ?: 0)
+
+        LaunchedEffect(Unit){
+            viewModel.isDeleted.collectLatest { isDeleted ->
+                if(isDeleted){
+                    var route = navController.previousBackStackEntry?.destination?.route
+                    if(route != null){
+                        val args = navController.previousBackStackEntry?.destination?.arguments
+                        if(args!=null)
+                            for(i in args){
+                                route = route?.replace("{${i.key}}", navController.previousBackStackEntry?.arguments?.getString(i.key)!!)
+                            }
+                    }
+                    else route = Destination.MY_PROFILE.dest
+                    navController.popBackStack()
+                    navController.popBackStack()
+                    navController.navigate(route!!)
+                    stop.value = true
+                }
+            }
+        }
+        if(!stop.value){
+            val counts = viewModel.dataCount.collectAsState().value
+            if(counts!=null){
+                HorizontalPager(
+                    count = counts.images,
+                    state = pos
+                ) {
+                    val img = loadImage(it, album, viewModel).value
+                    if (img is StateResult.Success<Image>) {
+                        ZoomableAsyncImage(
+                            image = img.data,
+                            token = viewModel.getToken(),
+                            scrollState = pos
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
-fun ImageScreen(navController: NavController, imageUUID: String?) {
+fun loadImage(
+    pos: Int,
+    albumID: Int? = null,
+    viewModel: ImageViewModel,
+): State<StateResult<Image>> {
 
-    if(imageUUID == null){
-        navController.popBackStack()
-        return
-    }
-    val imageViewModel: ImageViewModel = viewModel()
-    imageViewModel.loadImage(imageUUID)
-    val isDeleted = imageViewModel.isDeleted.collectAsState()
-    val image = imageViewModel.image.collectAsState()
+    // Creates a State<T> with Result.Loading as initial value
+    // If either `url` or `imageRepository` changes, the running producer
+    // will cancel and will be re-launched with the new inputs.
+    return produceState<StateResult<Image>>(initialValue = StateResult.Loading, pos, albumID, viewModel) {
 
-    if(isDeleted.value){
-        var route = navController.previousBackStackEntry?.destination?.route
-        if(route != null){
-            val args = navController.previousBackStackEntry?.destination?.arguments
-            if(args!=null)
-                for(i in args){
-                    route = route?.replace("{${i.key}}", navController.previousBackStackEntry?.arguments?.getString(i.key)!!)
-                }
-        }
-        else route = Destination.MY_PROFILE.dest
-        navController.popBackStack()
-        navController.popBackStack()
-        navController.navigate(route!!)
-        return
-    }
+        // In a coroutine, can make suspend calls
+        val image = viewModel.loadImage(pos, albumID)
 
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize()
-    ){
-        AsyncImage(
-            modifier = Modifier.fillMaxWidth(),
-            model = Constant.imageURL(image.value?.uuid.toString()),
-            contentDescription = ""
-        )
-        Text(text = image.value?.created.toString())
-        Button(onClick = {
-            imageViewModel.deleteImage(imageUUID)
-        }) {
-            Text(text = "delete")
-        }
-        Button(onClick = {
-            save(Constant.imageURL(image.value?.uuid.toString()))
-        }) {
-            Text(text = "save")
+        // Update State with either an Error or Success result.
+        // This will trigger a recomposition where this State is read
+        value = if (image == null) {
+            StateResult.Error
+        } else {
+            StateResult.Success(image)
         }
     }
 }

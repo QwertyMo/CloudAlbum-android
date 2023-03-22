@@ -2,6 +2,7 @@ package ru.kettuproj.cloudalbum.screen.createAlbum.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -9,6 +10,7 @@ import ru.kettuproj.cloudalbum.model.Album
 import ru.kettuproj.cloudalbum.repository.AlbumRepo
 import ru.kettuproj.cloudalbum.settings.Settings
 
+@DelicateCoroutinesApi
 class CreateAlbumViewModel (application: Application) : AndroidViewModel(application) {
 
 
