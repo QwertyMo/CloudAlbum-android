@@ -87,7 +87,7 @@ fun Navigation(navController: NavHostController, splash: SplashScreen, paddings:
         composable(Destination.SPLASH.dest) { SplashScreen(navController, splash) }
         composable(Destination.MY_PROFILE.dest) { MyProfileScreen(navController, paddings) }
         composable(Destination.LOGIN.dest) { LoginScreen(navController) }
-        composable(Destination.ALBUMS.dest) { AlbumsScreen(navController) }
+        composable(Destination.ALBUMS.dest) { AlbumsScreen(navController, paddings) }
         composable(Destination.CREATE_ALBUM.dest) { CreateAlbumScreen(navController) }
         composable(
             route = "${Destination.IMAGE.dest}?pos={pos}&album={album}",
@@ -100,7 +100,7 @@ fun Navigation(navController: NavHostController, splash: SplashScreen, paddings:
         composable(
             route = "${Destination.ALBUM.dest}/{albumID}",
             arguments = listOf(navArgument("albumID"){type = NavType.StringType})) { backStackEntry ->
-            AlbumScreen(navController, backStackEntry.arguments?.getString("albumID"))
+            AlbumScreen(navController, paddings, backStackEntry.arguments?.getString("albumID"))
         }
     }
 }

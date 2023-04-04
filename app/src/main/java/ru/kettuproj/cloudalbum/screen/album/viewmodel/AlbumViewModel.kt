@@ -7,6 +7,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import ru.kettuproj.cloudalbum.model.Album
 import ru.kettuproj.cloudalbum.model.Image
 import ru.kettuproj.cloudalbum.repository.AlbumRepo
 import ru.kettuproj.cloudalbum.repository.ImageRepo
@@ -18,11 +19,14 @@ class AlbumViewModel (application: Application) : AndroidViewModel(application) 
     private val token = MutableStateFlow(null as String?)
 
     val images = mutableStateListOf<Image>()
+    val loaded  = MutableStateFlow(false)
+    val album = MutableStateFlow<Album?>(null)
 
     private var id: Int? = null
 
     init {
         token.value = Settings.getToken(context)
+        loadAlbum()
         getAllImages()
     }
 
@@ -32,6 +36,17 @@ class AlbumViewModel (application: Application) : AndroidViewModel(application) 
             if(token.value!=null && id!=null) {
                 val data = AlbumRepo.getAlbumImages(token.value.toString(), id!!)
                 images.addAll(data.data)
+                loaded.value = true
+            }
+        }
+    }
+
+    @DelicateCoroutinesApi
+    private fun loadAlbum(){
+        GlobalScope.launch {
+            if(token.value!=null && id!=null) {
+                val data = AlbumRepo.getAlbum(token.value.toString(), id!!)
+                album.value = data.data
             }
         }
     }

@@ -30,6 +30,12 @@ class ImageViewModel (application: Application) : AndroidViewModel(application) 
         token = Settings.getToken(context)
     }
 
+    fun updateCurrent(pos: Int, albumID: Int?){
+        GlobalScope.launch {
+            image.value = loadImage(pos, albumID)
+        }
+    }
+
     fun getDataCount(albumID: Int? = null){
         GlobalScope.launch {
             if(token!=null) {

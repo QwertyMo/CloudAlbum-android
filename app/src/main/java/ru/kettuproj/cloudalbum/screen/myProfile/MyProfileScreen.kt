@@ -1,15 +1,19 @@
 package ru.kettuproj.cloudalbum.screen.myProfile
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -32,7 +36,7 @@ fun MyProfileScreen(navController: NavController, paddings: PaddingValues){
     val galleryLauncher = galleryLauncher{ viewModel.uploadImage(it) }
 
     val images  = viewModel.images as List<Image>
-    val user    = viewModel.user.collectAsState()
+    val user    = viewModel.user.collectAsState().value
     val loaded  = viewModel.loaded.collectAsState()
 
     Box(modifier = Modifier
@@ -46,11 +50,13 @@ fun MyProfileScreen(navController: NavController, paddings: PaddingValues){
         .navigationBarsPadding()
         .padding(paddings)) {
         Column {
-            Row(modifier = Modifier.fillMaxWidth()){
+            Row(modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ){
                 Box{
                     ProfileImage(
                         modifier = Modifier.padding(16.dp),
-                        user = user.value,
+                        user = user,
                         size = 96,
                     )
                     FloatingActionButton(
@@ -62,9 +68,27 @@ fun MyProfileScreen(navController: NavController, paddings: PaddingValues){
                     ) {
                         Image(
                             modifier = Modifier.size(16.dp),
-                            painter = painterResource(R.drawable.baseline_edit_24),
+                            painter = painterResource(R.drawable.baseline_logout_24),
                             contentDescription = "Icon"
                         )
+                    }
+                }
+                Box(
+                    contentAlignment = Alignment.Center
+                ){
+                    Column{
+                        if(user!=null){
+                            Text(
+                                text = user.login,
+                                fontSize = 24.sp
+                            )
+                        }
+                        if(loaded.value){
+                            Text(
+                                text = "${images.size} images",
+                                fontSize = 20.sp
+                            )
+                        }
                     }
                 }
             }

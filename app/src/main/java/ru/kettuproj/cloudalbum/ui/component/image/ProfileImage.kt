@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ru.kettuproj.cloudalbum.common.dp
 import ru.kettuproj.cloudalbum.common.requestImage
+import ru.kettuproj.cloudalbum.model.Album
 import ru.kettuproj.cloudalbum.model.Image
 import ru.kettuproj.cloudalbum.model.User
 import ru.kettuproj.cloudalbum.ui.component.animation.Shimmer
@@ -30,6 +31,7 @@ fun ProfileImage(
     modifier: Modifier = Modifier,
     size: Int = 64,
     user: User? = null,
+    album: Album? = null,
     image: Image? = null,
     token: String? = null){
 
@@ -37,11 +39,21 @@ fun ProfileImage(
         .size(size.dp)
         .clip(CircleShape)
 
-    if(user == null){
+    if(user == null && album == null){
         Shimmer(modifier = mod)
     }
     else if(image == null){
-        val grad = randomGradient(user.id)
+        var id = 0
+        var text = ""
+        if(user!=null) {
+            text = user.login[0].toString()
+            id = user.id
+        }
+        else if(album!=null) {
+            text = album.name[0].toString()
+            id = album.id
+        }
+        val grad = randomGradient(id)
         Box(modifier = mod
             .background(
                 brush = Brush.linearGradient(
@@ -53,8 +65,9 @@ fun ProfileImage(
             ),
             contentAlignment = Alignment.Center
         ){
+
             Text(
-                user.login[0].toString(),
+                text,
                 fontSize = (size/2).dp(),
                 color = Color.White
             )

@@ -1,9 +1,6 @@
 package ru.kettuproj.cloudalbum.ui.component.image
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.MutatePriority
-import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -45,7 +42,8 @@ fun ZoomableAsyncImage(
     contentScale: ContentScale = ContentScale.Fit,
     isRotation: Boolean = false,
     isZoomable: Boolean = true,
-    scrollState: ScrollableState? = null
+    scrollState: ScrollableState? = null,
+    onClick: () -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -61,7 +59,7 @@ fun ZoomableAsyncImage(
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = { /* NADA :) */ },
+                onClick = { onClick() },
                 onDoubleClick = {
                     if (scale.value != 1f) {
                         scale.value = 1f

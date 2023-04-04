@@ -23,6 +23,13 @@ object AlbumRepo {
         }
     }
 
+    suspend fun getAlbum(token: String, albumID: Int): RepositoryResponse<Album?> {
+        return get("${Constant.REST_HOST}/album", null){
+            bearerAuth(token)
+            parameter("albumID", albumID)
+        }
+    }
+
     suspend fun getMyAlbums(token: String): RepositoryResponse<List<Album>> {
         return get("${Constant.REST_HOST}/album/my", listOf()){
             bearerAuth(token)
