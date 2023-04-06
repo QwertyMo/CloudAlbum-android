@@ -22,7 +22,8 @@ fun ImageGrid(
     token: String?,
     images: List<Image>,
     albumID: Int? = null,
-    isLoaded: Boolean = true
+    isLoaded: Boolean = true,
+    loadCount: Int = 33
 ){
 
     if(!isLoaded){
@@ -33,7 +34,7 @@ fun ImageGrid(
             modifier = Modifier.fillMaxHeight(),
             state = state
             ){
-            items(33){
+            items(loadCount){
                 Shimmer(
                     Modifier
                         .padding(1.dp)

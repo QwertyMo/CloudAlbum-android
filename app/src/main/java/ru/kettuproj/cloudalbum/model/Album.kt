@@ -11,5 +11,7 @@ data class Album(
     @Required
     @SerialName("creatorId") val creatorId: String,
     @Required
-    @SerialName("name") val name: String
+    @SerialName("name") val name: String,
+    @Required
+    @SerialName("images") val images: Int
 )

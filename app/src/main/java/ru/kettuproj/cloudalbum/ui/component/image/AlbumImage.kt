@@ -1,14 +1,14 @@
 package ru.kettuproj.cloudalbum.ui.component.image
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -18,21 +18,26 @@ import ru.kettuproj.cloudalbum.ui.component.animation.Shimmer
 
 @Composable
 fun AlbumImage(
-    onClick: () -> Unit,
+    color: Color = Color.Transparent,
+    onClick: () -> Unit = {},
+    clickable: Boolean = true,
     image: Image,
-    token: String? = null
+    token: String? = null,
+    shimmered: Boolean = true,
+    size: Int = 128,
+    padding: Int = 1
 ){
     val loading = remember { mutableStateOf(true) }
     val request = requestImage(image, token)
-    val modifier = Modifier
-        .padding(1.dp)
-        .height(128.dp)
-        .width(128.dp)
+    var modifier = Modifier
+        .padding(padding.dp)
+        .height(size.dp)
+        .width(size.dp)
+    if(clickable) modifier = modifier.clickable{ onClick() }
     Box(
         modifier = modifier
-            .clickable { onClick() }
     ){
-        if(loading.value) Shimmer(modifier)
+        if(loading.value && shimmered) Shimmer(modifier)
         AsyncImage(
             model = request,
             contentScale = ContentScale.Crop,
@@ -41,5 +46,6 @@ fun AlbumImage(
                 loading.value = false
             }
         )
+        Box(modifier = Modifier.background(color).fillMaxSize())
     }
 }

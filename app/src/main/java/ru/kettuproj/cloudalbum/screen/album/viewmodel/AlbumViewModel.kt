@@ -3,6 +3,7 @@ package ru.kettuproj.cloudalbum.screen.album.viewmodel
 import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
+import io.ktor.http.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,14 +22,9 @@ class AlbumViewModel (application: Application) : AndroidViewModel(application) 
     val images = mutableStateListOf<Image>()
     val loaded  = MutableStateFlow(false)
     val album = MutableStateFlow<Album?>(null)
+    val deleted = MutableStateFlow(false)
 
     private var id: Int? = null
-
-    init {
-        token.value = Settings.getToken(context)
-        loadAlbum()
-        getAllImages()
-    }
 
     @DelicateCoroutinesApi
     private fun getAllImages(){
@@ -61,8 +57,22 @@ class AlbumViewModel (application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun deleteAlbum(){
+        GlobalScope.launch{
+            if(token.value!=null && id!=null) {
+                val data = AlbumRepo.deleteAlbum(token.value.toString(),id!!)
+                if(data.status == HttpStatusCode.OK) deleted.value = true
+            }
+        }
+    }
+
+
     fun setID(id: String){
+        if(this.id!=null) return
         this.id = id.toInt()
+        token.value = Settings.getToken(context)
+        loadAlbum()
+        getAllImages()
     }
 
     fun getToken():String?{

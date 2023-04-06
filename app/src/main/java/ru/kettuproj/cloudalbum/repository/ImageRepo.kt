@@ -53,6 +53,15 @@ object ImageRepo {
         else RepositoryResponse(data.status, null)
     }
 
+    suspend fun getPosedImages(token: String, start: Int, end: Int, albumID: Int? = null): RepositoryResponse<List<Image>>{
+        return get<List<Image>>("$REST_HOST/image/posed", emptyList()){
+            bearerAuth(token)
+            if (albumID != null) parameter("albumID", albumID)
+            parameter("posStart", start)
+            parameter("posEnd", end)
+        }
+    }
+
     suspend fun deleteImage(token: String, uuid: String): RepositoryResponse<EmptyData>{
         return delete("$REST_HOST/image"){
             bearerAuth(token)

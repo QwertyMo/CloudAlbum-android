@@ -1,21 +1,20 @@
 package ru.kettuproj.cloudalbum.screen.createAlbum
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TextField
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collectLatest
+import ru.kettuproj.cloudalbum.R
 import ru.kettuproj.cloudalbum.screen.Destination
 import ru.kettuproj.cloudalbum.screen.createAlbum.viewmodel.CreateAlbumViewModel
 import ru.kettuproj.cloudalbum.screen.navigate
@@ -49,15 +48,32 @@ fun CreateAlbumScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center
     ) {
 
-        Text(text = "Name")
-        TextField(value = name.value, onValueChange = {
-            name.value = it
-        })
+        val fontSize = 18.sp
 
-        Button(onClick = {
-            viewModel.create(name.value)
-        }) {
-            Text(text = "Create")
+        Text(
+            text = "Album name",
+            fontSize = fontSize
+        )
+        OutlinedTextField(
+            value = name.value,
+            modifier = Modifier.padding(8.dp),
+            onValueChange = {
+                name.value = it
+            }
+        )
+
+        Spacer(modifier = Modifier.padding(4.dp))
+
+        Button(
+            onClick = { viewModel.create(name.value) },
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text(
+                text = "Create",
+                fontSize = fontSize,
+                modifier = Modifier
+                    .padding(2.dp)
+            )
         }
     }
 }

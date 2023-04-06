@@ -5,6 +5,8 @@ import ru.kettuproj.cloudalbum.common.Constant
 import ru.kettuproj.cloudalbum.model.Album
 import ru.kettuproj.cloudalbum.model.Image
 import ru.kettuproj.cloudalbum.model.RepositoryResponse
+import ru.kettuproj.cloudalbum.net.EmptyData
+import ru.kettuproj.cloudalbum.net.delete
 import ru.kettuproj.cloudalbum.net.get
 import ru.kettuproj.cloudalbum.net.post
 
@@ -23,6 +25,12 @@ object AlbumRepo {
         }
     }
 
+    suspend fun deleteAlbum(token: String, albumID: Int): RepositoryResponse<EmptyData> {
+        return delete("${Constant.REST_HOST}/album"){
+            bearerAuth(token)
+            parameter("albumID", albumID)
+        }
+    }
     suspend fun getAlbum(token: String, albumID: Int): RepositoryResponse<Album?> {
         return get("${Constant.REST_HOST}/album", null){
             bearerAuth(token)

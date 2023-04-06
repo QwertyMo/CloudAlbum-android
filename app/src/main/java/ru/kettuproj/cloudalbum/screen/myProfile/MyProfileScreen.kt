@@ -3,15 +3,18 @@ package ru.kettuproj.cloudalbum.screen.myProfile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,6 +26,7 @@ import ru.kettuproj.cloudalbum.model.Image
 import ru.kettuproj.cloudalbum.screen.Destination
 import ru.kettuproj.cloudalbum.screen.navigate
 import ru.kettuproj.cloudalbum.screen.myProfile.viewmodel.ImagesViewModel
+import ru.kettuproj.cloudalbum.ui.component.animation.Shimmer
 import ru.kettuproj.cloudalbum.ui.component.button.ButtonAddImage
 import ru.kettuproj.cloudalbum.ui.component.button.galleryLauncher
 import ru.kettuproj.cloudalbum.ui.component.grid.ImageGrid
@@ -77,28 +81,65 @@ fun MyProfileScreen(navController: NavController, paddings: PaddingValues){
                     contentAlignment = Alignment.Center
                 ){
                     Column{
-                        if(user!=null){
+                        if(loaded.value && user!=null){
                             Text(
                                 text = user.login,
                                 fontSize = 24.sp
                             )
-                        }
-                        if(loaded.value){
                             Text(
                                 text = "${images.size} images",
                                 fontSize = 20.sp
                             )
                         }
+                        else{
+                            Shimmer(modifier = Modifier
+                                .width(128.dp)
+                                .clip(RoundedCornerShape(4.dp))){
+                                Text(
+                                    text = "1",
+                                    color = Color.Transparent,
+                                    fontSize = 24.sp
+                                )
+                            }
+                            Spacer(modifier = Modifier.padding(2.dp))
+                            Shimmer(modifier = Modifier
+                                .width(96.dp)
+                                .clip(RoundedCornerShape(4.dp))){
+                                Text(
+                                    text = "1",
+                                    color = Color.Transparent,
+                                    fontSize = 20.sp
+                                )
+                            }
+                        }
                     }
                 }
             }
 
-            ImageGrid(
-                navController = navController,
-                token = viewModel.getToken(),
-                images = images,
-                isLoaded = loaded.value
-            )
+            if(!loaded.value || (user!=null && images.isNotEmpty())){
+                ImageGrid(
+                    navController = navController,
+                    token = viewModel.getToken(),
+                    images = images,
+                    isLoaded = loaded.value,
+                    loadCount = images.size
+                )
+            }else{
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(60.dp),
+                        textAlign = TextAlign.Center,
+                        text = "No images. Press + to add your first image",
+                        lineHeight = 30.sp,
+                        fontSize = 24.sp
+                    )
+                }
+            }
         }
         ButtonAddImage(galleryLauncher)
     }
